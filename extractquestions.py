@@ -114,3 +114,4 @@ for q in qs:
         q.mark_statement(answr)
     print(q.check_answer())
     q.print_answer()
+    print("-------------------------------------")

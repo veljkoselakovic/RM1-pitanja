@@ -405,7 +405,8 @@ FLAG?::*html+ Šta se dešava kada se na udaljenoj strani pri prijemu HDLC okvir
  
 ::Šta se sprovodi pri prenosu podataka sa višeg na niži sloj?::*html+ <p>Šta se sprovodi pri prenosu podataka sa višeg na niži sloj?</p>{  
 ~%50%[moodle]Enkapsulacija podataka višeg sloja u poruku nižeg sloja  
-~%50%*moodle+Multipleksiranje vedeg broja protokola višeg sloja u poruke nižeg sloja  ~%-100%*moodle+Provera greške u poruci dobijenoj od višeg sloja.  
+~%50%*moodle+Multipleksiranje vedeg broja protokola višeg sloja u poruke nižeg sloja
+~%-100%*moodle+Provera greške u poruci dobijenoj od višeg sloja.
 ~%-100%*moodle+Demultipleksiranje pristiglih poruka na više protokola nižeg nivoa.  
 ~%-100%*moodle+Gleda se polje Protocol type na osnovu koga se odlučuje kom protokolu nižeg sloja da se predaju podaci.  
 ~%-100%*moodle+Ništa od ponuđenog.  
@@ -799,13 +800,14 @@ Mreze pitanja 2. deo.
  
 ::Koja ICMP poruka se šalje kada ruter prepozna da next-hop pripada istoj mreži kao i interfejs na koji je paket došao?::*html+ 
 <p>Koja ICMP poruka se šalje kada <span>ruter </span>prepozna da next-hop pripada istoj mreži kao i interfejs na koji je paket 
-<span>došao</span>?</p>,  ~[moodle]Host unreachable.  
+<span>došao</span>?</p>,
+~[moodle]Host unreachable.
 ~[moodle]Network unreachable.  
 ~[moodle]Protocol unreachable.  
 ~[moodle]Port unreachable.  
-~<p>Time Exceeded.</p>  
-~<p>Echo Reply.</p>  
-=<p>Redirect.</p>  
+~[moodle]Time Exceeded.</p>
+~[moodle]Echo Reply.</p>
+=[moodle]Redirect.</p>
  
 ::Koja ICMP poruka se šalje kada uređaj ne dobije odgovor na ARP zahtev?::*html+ <p>Koja ICMP poruka se šalje kada uređaj ne dobije odgovor na ARP zahtev?</p>{  =[moodle]Host unreachable.  
 ~[moodle]Network unreachable.  
@@ -816,8 +818,8 @@ Mreze pitanja 2. deo.
 ~<p>Redirect.</p>  
  
 ::Koja je osnovna jedinica kojom se izražava protok saobradaja u računarskih mrežama?::*html+ <p>Koja je osnovna jedinica kojom se izražava protok saobradaja u računarskih mrežama?</p>,  
-=<p><strong>bps - bit per second</strong></p>  
-~%-20%[moodle]Bps - byte pre second  
+~%80%[moodle]ps - bit per second
+~%-20%[moodle]Bps - byte pre second
 ~%20%[moodle]pps - packet per second  
 ~%-20%[moodle]Ips - information per second  
 ~%-20%*moodle+ništa od ponuđenog  

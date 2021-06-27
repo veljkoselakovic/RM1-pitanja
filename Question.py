@@ -1,3 +1,4 @@
+import random
 class Statement(object):
 
     def __init__(self, text, value):
@@ -41,6 +42,8 @@ class Question(object):
     def add_statement(self, text, value):
         s = Statement(text, value)
         self.statement_list.append(s)
+        random.shuffle(self.statement_list)
+
 
     def __str__(self):
         output_string = ""
