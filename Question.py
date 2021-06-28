@@ -47,6 +47,7 @@ class Question(object):
         random.shuffle(self.statement_list)
 
     def __str__(self):
+        random.shuffle(self.statement_list)
         output_string = ""
         output_string += "---K" + self.category + "---\n"
         output_string += self.text
