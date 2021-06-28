@@ -7,6 +7,8 @@ Pitanja su izvučena [odavde](https://drive.google.com/open?id=1--8WGiKMDDu9VxWT
 
 Sintaksa ubacivanja novih pitanja nije preterano teška
 
+Ako bi se neko iscimao i nekako našao, ovo bi radilo za sve moodle tip pitalice uz malo parsiranja
+
 ## Dodavanje novih pitanja
 
 Pokrenuti extractquestions.py, koji iz "mreze pitanja.txt" čita pitanja (ako se dodaju nova, obrisati .txt ili samo koristiti neki drugi)
