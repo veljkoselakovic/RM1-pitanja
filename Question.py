@@ -1,4 +1,6 @@
 import random
+
+
 class Statement(object):
 
     def __init__(self, text, value):
@@ -31,12 +33,12 @@ class Question(object):
 
     def mark_statement(self, statement_index):
         if statement_index <= 0 or statement_index > len(self.statement_list):
-            return #raise Exception("Answer doesn't exist")
+            return  # raise Exception("Answer doesn't exist")
         self.statement_list[statement_index - 1].mark()
 
     def unmark_statement(self, statement_index):
         if statement_index <= 0 or statement_index > len(self.statement_list):
-            return #raise Exception("Answer doesn't exist")
+            return  # raise Exception("Answer doesn't exist")
         self.statement_list[statement_index - 1].unmark()
 
     def add_statement(self, text, value):
@@ -44,9 +46,9 @@ class Question(object):
         self.statement_list.append(s)
         random.shuffle(self.statement_list)
 
-
     def __str__(self):
         output_string = ""
+        output_string += "---K" + self.category + "---\n"
         output_string += self.text
         output_string += "\n"
         i = 0
@@ -70,11 +72,22 @@ class Question(object):
             if S.getValue() > 0:
                 print(S)
 
+    def controlPrint(self):
+        raise NotImplemented("Implement this!")
+
 
 class MultipleSolutionQuestion(Question):
 
     def __init__(self, text, category):
         super().__init__(text, category)
+
+    def controlPrint(self):
+        output = ""
+        output += ""
+
+    def __str__(self):
+        output = "---Multiple Choice---\n"
+        return output + super().__str__()
 
 
 class SingleSolutionQuestion(Question):
@@ -87,13 +100,16 @@ class SingleSolutionQuestion(Question):
                 raise Exception("Can't select multiple values")
         super().mark_statement(statement_index)
 
+
 class EssayQuestion(Question):
     def __init__(self, text, category):
         super().__init__(text, category)
         self.solution = ""
         self.answer = ""
+
     def add_statement(self, text, value=100):
-        self.solution = text
+        self.solution = text.strip()
+
     def add_answer(self, text):
         self.answer = text.strip()
 
@@ -103,5 +119,20 @@ class EssayQuestion(Question):
         else:
             return 0.0
 
+    def print_answer(self):
+        print(self.solution)
 
 
+class TrueFalseQuestion(EssayQuestion):
+    def __init__(self, text, category):
+        super().__init__(text, category)
+
+    def add_statement(self, text, value=100):
+        if text != "False" and text != "True":
+            raise Exception("Only True or False!")
+        self.solution = text.strip()
+
+    def add_answer(self, text):
+        if text != "False" and text != "True":
+            raise Exception("Only True or False!")
+        self.answer = text.strip()

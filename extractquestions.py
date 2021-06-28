@@ -1,6 +1,5 @@
 import itertools
 import re
-import Question
 
 in_question = False
 current_category = ""
@@ -21,6 +20,9 @@ def extractQuestion(line):
 
 
 def findFirstCapital(line):
+    if '%' in line:
+        ind = line.rfind('%')
+        return ind + 1
     for i in range(0, len(line)):
         if line[i].istitle():
             return i
@@ -29,89 +31,64 @@ def findFirstCapital(line):
     return 0
 
 
-def extractStatement(line):
-    x = re.search(r"([~|=]\*moodle+.*)|([~|=]\[moodle.*)|(%-?\d+%.*)", line)
-    if x is not None:
-        return x.group(0)
-    else:
-        return ""
-
-
 def extractValue(line):
-    x = re.search(r"%-?([0-9]*[.]?)?[0-9]*%", line)
+    x = re.search(r"%-?([0-9]*[.]?)?[0-9]+%", line)
     if x is not None:
         return float(x.group(0)[1:-1])
     else:
-        x = re.search(r"=", line)
-        if x is not None:
-            return 100
+        if line[0] == '=':
+            return 100.0
         else:
-            return 0
+            return 0.0
 
 
-def countRows(line):
-    x = len(re.findall(r"([~|=]\*moodle+.*)|([~|=]\[moodle.*)|(%-?([0-9]*[.]?)?[0-9]*%)", line))
-    return x
 
+import sqlite3
+
+con = sqlite3.connect('rm1.db')
+cur = con.cursor()
+
+cur.execute('''CREATE TABLE if not exists questions
+               (idq INTEGER PRIMARY KEY, qText text, Type text, section text)''')
+cur.execute('''CREATE TABLE if not exists statements
+               (ids INTEGER PRIMARY KEY, sText text, val integer, idq integer, foreign key (idq) references questions(idq))''')
 
 qs = list()
 with open("mreze pitanja.txt", "r", encoding='utf-8') as f:
     lines = f.readlines()
-    curQ = ""
-    curQobj = None
-    answ = ""
-    for line in lines:
-        if isQuestion(line):
-
-            curQ = extractQuestion(line)
-            answ = extractStatement(line)
-            curQobj = None
+    i = 0
+    curQuestion = ""
+    questionID = 1
+    questionType = ""
+    sectionID = 0
+    statementCounter = 0
+    while i < len(lines):
+        if isQuestion(lines[i]):
+            curQuestion = lines[i]
         else:
-            if len(line) > 1 and line[1] == '%':
-                if curQobj is None:
-                    curQobj = Question.MultipleSolutionQuestion(curQ, "I")
-                    qs.append(curQobj)
-                if answ != "" and curQobj is not None:
-                    curQobj.add_statement(answ[findFirstCapital(answ):], extractValue(answ))
-                    answ = ""
-                if curQobj is not None:
-                    for i in range(countRows(line)):
-                        try:
-                            curQobj.add_statement(line[findFirstCapital(line):], extractValue(line))
-                            line = line[findFirstCapital(line):]
-                        except:
-                            pass
+            if len(lines[i].strip()) == 0:
+                if statementCounter == 0:
+                    questionType = "True/False"
+                elif statementCounter == 1:
+                    questionType = "Essay"
+                cur.execute('''INSERT INTO questions (qText, Type, section) VALUES (?, ?, ?)''', (curQuestion, questionType, str(sectionID)))
+                questionID += 1
+                curQuestion = ""
+                questionType = ""
+                statementCounter = 0
+            elif '@' in lines[i].strip() :
+                ind = lines[i].find('@')
+                sectionID = lines[i][ind+1]
             else:
-                if curQobj is None:
-                    curQobj = Question.SingleSolutionQuestion(curQ, "I")
-                    qs.append(curQobj)
-                if answ != "" and curQobj is not None:
-                    curQobj.add_statement(answ[findFirstCapital(answ):], extractValue(answ))
-                    answ = ""
-                if curQobj is not None and len(line.strip()) != 0:
-                    for i in range(countRows(line)):
-                        try:
-                            curQobj.add_statement(line[findFirstCapital(line):], extractValue(line))
-                            line = line[findFirstCapital(line):]
-                        except:
-                            pass
+                if '%' in lines[i]:
+                    questionType = "MulChoice"
+                elif '%' not in lines[i]:
+                    questionType = "SingleChoice"
+                cur.execute('''INSERT INTO statements (sText, val, idq) VALUES (?, ?, ?)''',
+                            (lines[i][findFirstCapital(lines[i]):], extractValue(lines[i]), questionID))
+                statementCounter += 1
 
-import random
+        i += 1
+    con.commit()
 
-random.shuffle(qs)
-for q in qs:
-
-    if isinstance(q, Question.MultipleSolutionQuestion):
-        print("------MULTIPLE CHOICE----------")
-        print(q)
-        answrs = input().strip().split(' ')
-        for choice in answrs:
-            q.mark_statement(int(choice))
-
-    else:
-        print(q)
-        answr = int(input())
-        q.mark_statement(answr)
-    print(q.check_answer())
-    q.print_answer()
-    print("-------------------------------------")
+con.close()
