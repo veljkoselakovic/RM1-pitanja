@@ -54,3 +54,4 @@ ili
 ~True
 =False
 ```
+Takođe, za više pitanja za redom iz iste oblasti, samo prvo mora imati tag za oblast
