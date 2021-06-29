@@ -26,7 +26,7 @@ def findFirstCapital(line):
     for i in range(0, len(line)):
         if line[i].istitle():
             return i
-        if line[i] == ']' or line[i] == '+':
+        if line[i] == '~' or line[i] == '=':
             return i + 1
     return 0
 
@@ -61,7 +61,12 @@ with open(file, "r", encoding='utf-8') as f:
     lines = f.readlines()
     i = 0
     curQuestion = ""
-    questionID = 1
+    cur.execute('''select max(idq) from questions''')
+    nr = cur.fetchone()[0]
+    if nr is None:
+        questionID = 1
+    else:
+        questionID = int(nr) + 1
     questionType = ""
     sectionID = 0
     statementCounter = 0
