@@ -54,7 +54,10 @@ cur.execute('''CREATE TABLE if not exists statements
                (ids INTEGER PRIMARY KEY, sText text, val integer, idq integer, foreign key (idq) references questions(idq))''')
 
 qs = list()
-with open("mreze pitanja.txt", "r", encoding='utf-8') as f:
+
+file = input("Unesi fajl: \n")
+
+with open(file, "r", encoding='utf-8') as f:
     lines = f.readlines()
     i = 0
     curQuestion = ""
